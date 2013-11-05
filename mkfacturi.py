@@ -24,6 +24,7 @@ class Company:
         self.address = data['address']
         self.delegate = data['delegate']
         self.bank = data['bank']
+        self.vat_number = data['vat_number']
         self.accounts = data.get('accounts')
 
 
