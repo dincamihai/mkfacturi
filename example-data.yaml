@@ -5,6 +5,7 @@ supplier:
   vat_number: "RO87654321"
   delegate: "Gigel Jmecherul, CI: XX 555444"
   bank: "ING Bank Romania București"
+  swift: "ABCDROBU""
   accounts:
     RON: "RO----------------------"
     EUR: "RO----------------------"
