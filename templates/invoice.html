@@ -1,5 +1,15 @@
-<div class="invoice">
-  <div class="header">
+<div
+    {%if invoice.one_per_page %}
+      class="invoice invoice-a4"
+    {% else %}
+      class="invoice"
+    {% endif %}>
+  <div 
+    {%if invoice.one_per_page %}
+      class="header header-a4"
+    {% else %}
+      class="header"
+    {% endif %}>
     <div class="supplier">
       <p>
         <strong>{{ _("Supplier", "Furnizor") }}:</strong>
@@ -48,7 +58,12 @@
   </div>
 
 
-  <table class="products">
+  <table 
+    {%if invoice.one_per_page %}
+      class="products products-a4"
+    {% else %}
+      class="products"
+    {% endif %}>
     <thead>
       <th>Nr.</th>
       <th>{{ _("Description", "Denumire produs/serviciu") }}</th>
@@ -74,7 +89,12 @@
     </tbody>
   </table>
 
-  <table class="footer">
+  <table
+    {%if invoice.one_per_page %}
+      class="footer footer-a4"
+    {% else %}
+      class="footer"
+    {% endif %}>
     <tbody>
       <tr>
         <td rowspan=2 class="supplier_sign">

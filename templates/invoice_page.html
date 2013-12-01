@@ -4,17 +4,25 @@
 {% block content %}
   <div class="breadcrumbs">
     <a href="{{ url_for('.home') }}">&laquo; index</a>
-    <a href="{{ url_for('.invoice', code=invoice.code) }}">one</a>
-    <a href="{{ url_for('.invoice', code=invoice.code, n=2) }}">two</a>
+    {% if not invoice.one_per_page %}
+        <a href="{{ url_for('.invoice', code=invoice.code) }}">one</a>
+        <a href="{{ url_for('.invoice', code=invoice.code, n=2) }}">two</a>
+    {% endif %}
   </div>
 
-  <div class="paper-a4">
-    {%- include 'invoice.html' with context -%}
+  {% if invoice.one_per_page %}
+    <div class="paper-a4">
+        {%- include 'invoice.html' with context -%}
+    </div>
+  {% else %}
+    <div class="paper-a4">
+        {%- include 'invoice.html' with context -%}
 
-    <hr class="middle">
+        <hr class="middle">
 
-    {%- if n == 2 %}
-      {%- include 'invoice.html' with context -%}
-    {%- endif %}
-  </div>
+        {%- if n == 2 %}
+        {%- include 'invoice.html' with context -%}
+        {%- endif %}
+    </div>
+  {% endif %}
 {% endblock content %}

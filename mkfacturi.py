@@ -48,6 +48,7 @@ class Invoice:
         self.date = data['date']
         self.due_date = self.date + timedelta(days=self.contract.due_days)
         self.products = data['products']
+        self.one_per_page = data.get('one-per-page', False)
         self.total_quantity = sum([prod['quantity'] for prod in self.products])
         self.exchange_rate = {k: Decimal(v) for k, v in
                               data['exchange_rate'].items()}
