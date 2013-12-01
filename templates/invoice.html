@@ -59,16 +59,18 @@
     </thead>
 
     <tbody>
+      {% for product in invoice.products %}
       <tr>
-        <td>1</td>
+        <td>{{ loop.index }}</td>
         <td>
-          {{ invoice.product }}
+          {{ product.name }}
         </td>
         <td>{{ invoice.contract.unit }} </td>
-        <td>{{ invoice.quantity }}</td>
-        <td>{{ invoice.price_per_unit }}</td>
-        <td>{{ invoice.total }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>{{ product.ppu or invoice.price_per_unit}}</td>
+        <td>{{ product.quantity * (product.ppu or invoice.price_per_unit)}}</td>
       </tr>
+      {% endfor %}
     </tbody>
   </table>
 

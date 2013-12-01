@@ -47,8 +47,8 @@ class Invoice:
         self.number = data['number']
         self.date = data['date']
         self.due_date = self.date + timedelta(days=self.contract.due_days)
-        self.product = data['product']
-        self.quantity = data['quantity']
+        self.products = data['products']
+        self.total_quantity = sum([prod['quantity'] for prod in self.products])
         self.exchange_rate = {k: Decimal(v) for k, v in
                               data['exchange_rate'].items()}
         price_per_unit_str, currency = self.contract.price_per_unit.split()
@@ -57,10 +57,16 @@ class Invoice:
         if self.local:
             exchange = self.exchange_rate[currency]
             self.price_per_unit = q(q(self.price_per_unit * exchange, 2), 4)
-            self.total = q(self.price_per_unit * self.quantity, 2)
+            sub_totals = [p['quantity'] * Decimal(p.get('ppu',
+                                                  self.price_per_unit))
+                          for p in self.products]
+            self.total = q(sum(sub_totals), 2)
 
         else:
-            self.total = q(self.price_per_unit * self.quantity, 2)
+            sub_totals = [p['quantity'] * Decimal(p.get('ppu',
+                                                  self.price_per_unit))
+                          for p in self.products]
+            self.total = q(sum(sub_totals), 2)
             self.total_ron = q(self.total * self.exchange_rate[currency], 2)
 
     @property
