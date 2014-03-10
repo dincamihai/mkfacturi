@@ -53,9 +53,10 @@ class Invoice:
         self.exchange_rate = {k: Decimal(v) for k, v in
                               data['exchange_rate'].items()}
         price_per_unit_str, currency = self.contract.price_per_unit.split()
+        self.currency = currency
         self.price_per_unit = Decimal(price_per_unit_str)
 
-        if self.local:
+        if self.currency == "RON":
             exchange = self.exchange_rate[currency]
             self.price_per_unit = q(q(self.price_per_unit * exchange, 2), 4)
             sub_totals = [p['quantity'] * Decimal(p.get('ppu',
@@ -114,7 +115,7 @@ def invoice(code):
                 'supplier': model.supplier,
                 'invoice': invoice,
                 'client': invoice.client,
-                'currency': "RON" if invoice.local else "EUR",
+                'currency': invoice.currency,
                 'n': flask.request.args.get('n', '1', type=int),
             })
 

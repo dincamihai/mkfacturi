@@ -112,10 +112,10 @@
         </td>
 
         <td>
-          <p>Total: <strong>{{ invoice.total }}</strong></p>
-          {%- if not invoice.local %}
-            <p>Total (RON): {{ invoice.total_ron }}</p>
+          {%- if invoice.currency != "RON" %}
+            <p>Total ({{ invoice.currency }}): <strong>{{ invoice.total }}</strong></p>
           {%- endif %}
+          <p>Total (RON): {{ invoice.total_ron }}</p>
         </td>
       </tr>
 
