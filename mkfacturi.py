@@ -25,7 +25,7 @@ class Company:
         self.delegate = data['delegate']
         self.bank = data['bank']
         self.swift = data.get('swift', None)
-        self.vat_number = data['vat_number']
+        self.vat_number = data.get('vat_number', None)
         self.accounts = data.get('accounts')
 
 
