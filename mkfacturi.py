@@ -39,6 +39,14 @@ class Contract:
         self.price_per_unit = data['price_per_unit']
 
 
+class Product:
+
+    def __init__(self, data):
+        self.name = data['name']
+        self.quantity = Decimal(data['quantity'])
+        self.ppu = data.get('ppu', None)
+
+
 class Invoice:
 
     def __init__(self, data, contract):
@@ -47,11 +55,10 @@ class Invoice:
         self.number = data['number']
         self.date = data['date']
         self.due_date = self.date + timedelta(days=self.contract.due_days)
-        self.products = data['products']
+        self.products = [Product(p) for p in data['products']]
         self.one_per_page = data.get('one-per-page', False)
-        self.total_quantity = sum([prod['quantity'] for prod in self.products])
-        self.exchange_rate = {k: Decimal(v) for k, v in
-                              data['exchange_rate'].items()}
+        self.total_quantity = sum([prod.quantity for prod in self.products])
+        self.exchange_rate = {k: Decimal(v) for k, v in data['exchange_rate'].items()}
         price_per_unit_str, currency = self.contract.price_per_unit.split()
         self.currency = currency
         self.price_per_unit = Decimal(price_per_unit_str)
@@ -59,15 +66,13 @@ class Invoice:
         if self.currency == "RON":
             exchange = self.exchange_rate[currency]
             self.price_per_unit = q(q(self.price_per_unit * exchange, 2), 4)
-            sub_totals = [p['quantity'] * Decimal(p.get('ppu',
-                                                  self.price_per_unit))
-                          for p in self.products]
+            sub_totals = [p.quantity * (p.ppu or self.price_per_unit) for p in self.products]
             self.total = q(sum(sub_totals), 2)
 
         else:
-            sub_totals = [p['quantity'] * Decimal(p.get('ppu',
-                                                  self.price_per_unit))
-                          for p in self.products]
+            sub_totals = [
+                p.quantity * (p.ppu or self.price_per_unit) for p in self.products
+            ]
             self.total = q(sum(sub_totals), 2)
             self.total_ron = q(self.total * self.exchange_rate[currency], 2)
 
